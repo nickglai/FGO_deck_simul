@@ -1,0 +1,34 @@
+---
+title: "FGO Servant Deck Simulation"
+date: "July 13, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Creating the Servant Deck:
+```{r}
+servant <- c('Medea', 'Medea', 'Medea', 'Medea', 'Medea', 'Herc', 'Herc', 'Herc', 'Herc', 'Herc', 'Regend', 'Regend', 'Regend', 'Regend', 'Regend')
+type <- c('B','A','A','A','Q','B','B','B','Q','A','B','A','Q','Q','Q')
+servant_deck <- data.frame(servant,type)
+```
+
+## Running the experiment:
+```{r}
+sample <- 50000 #sample size
+count <- 0 #initialize numerator of proportion
+for (i in 1:sample){
+  shuffled_deck <- servant_deck[sample(nrow(servant_deck)),]#randomly order rows of data frame
+  draw1 <- shuffled_deck[1:5,]#partition into 3 hands
+  draw2 <- shuffled_deck[6:10,]
+  draw3 <- shuffled_deck[11:15,]
+  if (sum(draw1$servant == 'Medea')<3&sum(draw2$servant == 'Medea')<3&sum(draw3$servant == 'Medea')<3&sum(draw1$servant == 'Herc')<3&sum(draw2$servant == 'Herc')<3&sum(draw3$servant == 'Herc')<3&sum(draw1$servant == 'Regend')<3&sum(draw2$servant == 'Regend')<3&sum(draw3$servant == 'Regend')<3&sum(draw1$type == 'A')<3&sum(draw2$type == 'A')<3&sum(draw3$type == 'A')<3&sum(draw1$type == 'B')<3&sum(draw2$type == 'B')<3&sum(draw3$type == 'B')<3&sum(draw1$type == 'Q')<3&sum(draw2$type == 'Q')<3&sum(draw3$type == 'Q')<3){ #checking for chains
+    count <- count+1 #if none found, increment
+  }
+  
+}
+
+count/sample #calculate the proportion
+```
